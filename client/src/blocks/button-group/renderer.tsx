@@ -1,3 +1,4 @@
+import { ArrowCircleIcon } from '@/components/ArrowCircleIcon';
 import type { BlockRendererProps } from '../_shared/types';
 import type { ButtonGroupBlockData } from './schema';
 
@@ -12,7 +13,8 @@ export function ButtonGroupRenderer({ data }: BlockRendererProps<ButtonGroupBloc
     <div className={`hero-actions ${alignClass} ${stackClass}`.trim()}>
       {buttons.map((btn, idx) => {
         const variant = btn.variant ?? 'primary';
-        const classes = variant === 'secondary' ? 'btn btn-outline' : 'btn btn-primary';
+        const isSecondary = variant === 'secondary';
+        const classes = isSecondary ? 'btn btn-secondary' : 'btn btn-primary';
         return (
           <a
             key={idx}
@@ -21,7 +23,8 @@ export function ButtonGroupRenderer({ data }: BlockRendererProps<ButtonGroupBloc
             target={btn.linkMode === 'page' ? undefined : '_blank'}
             rel={btn.linkMode === 'page' ? undefined : 'noreferrer'}
           >
-            {btn.label}
+            <span>{btn.label}</span>
+            {isSecondary && <ArrowCircleIcon />}
           </a>
         );
       })}

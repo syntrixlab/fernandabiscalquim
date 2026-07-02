@@ -34,7 +34,7 @@ cd client && npm install && cd ..
 ### 3. Banco de dados
 
 ```bash
-npx prisma migrate dev
+cd server && npm install && npx prisma migrate dev
 ```
 
 ## Desenvolvimento

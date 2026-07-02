@@ -1,9 +1,10 @@
+import { ArrowCircleIcon } from '@/components/ArrowCircleIcon';
 import type { BlockRendererProps } from '../_shared/types';
 import type { ButtonBlockData } from './schema';
 
 export function ButtonRenderer({ data }: BlockRendererProps<ButtonBlockData>) {
   const variant = data.variant ?? 'primary';
-  const classes = variant === 'secondary' ? 'btn btn-outline' : variant === 'ghost' ? 'btn btn-ghost' : 'btn btn-primary';
+  const classes = variant === 'secondary' ? 'btn btn-secondary' : variant === 'ghost' ? 'btn btn-ghost' : 'btn btn-primary';
   return (
     <div className="page-public-button-wrapper">
       <a
@@ -14,6 +15,7 @@ export function ButtonRenderer({ data }: BlockRendererProps<ButtonBlockData>) {
       >
         {data.icon && <span className="page-button-icon">{data.icon}</span>}
         <span>{data.label}</span>
+        {variant === 'secondary' && <ArrowCircleIcon />}
       </a>
     </div>
   );

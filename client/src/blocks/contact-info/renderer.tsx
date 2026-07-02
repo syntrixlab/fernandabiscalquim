@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGlobe, faEnvelope, faLink } from '@fortawesome/free-solid-svg-icons';
 import { faInstagram, faFacebook, faLinkedin, faYoutube, faTiktok, faXTwitter, faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+import { ArrowCircleIcon } from '@/components/ArrowCircleIcon';
 import { RichText } from '@/components/RichText';
 import { fetchSiteSettings } from '@/api/queries';
 import type { SiteSettings, SocialLink } from '@/types';
@@ -44,7 +45,8 @@ export function ContactInfoRenderer({ data }: BlockRendererProps<ContactInfoBloc
 
   // Determinar classes do botão WhatsApp baseado no variant
   const whatsappVariant = data.whatsappVariant || 'primary';
-  const whatsappButtonClass = whatsappVariant === 'primary' ? 'btn btn-primary' : 'btn btn-outline';
+  const whatsappIsSecondary = whatsappVariant !== 'primary';
+  const whatsappButtonClass = whatsappIsSecondary ? 'btn btn-secondary' : 'btn btn-primary';
 
   const getLabelForSocial = (social: SocialLink): string => {
     if (social.label) return social.label;
@@ -103,6 +105,7 @@ export function ContactInfoRenderer({ data }: BlockRendererProps<ContactInfoBloc
           >
             <span className="page-button-icon"><FontAwesomeIcon icon={faWhatsapp} /></span>
             <span>{data.whatsappLabel}</span>
+            {whatsappIsSecondary && <ArrowCircleIcon />}
           </a>
         </div>
       )}

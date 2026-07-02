@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+import { ArrowCircleIcon } from '@/components/ArrowCircleIcon';
 import { fetchSiteSettings } from '@/api/queries';
 import type { SiteSettings } from '@/types';
 import type { BlockRendererProps } from '../_shared/types';
@@ -39,8 +40,9 @@ export function WhatsAppCtaRenderer({ data }: BlockRendererProps<WhatsAppCtaBloc
 
   const label = data.label || 'Enviar mensagem no WhatsApp';
   const style = data.style || 'primary';
+  const isSecondary = style !== 'primary';
   const openInNewTab = data.openInNewTab !== false;
-  const buttonClass = style === 'primary' ? 'btn btn-primary' : 'btn btn-outline';
+  const buttonClass = isSecondary ? 'btn btn-secondary' : 'btn btn-primary';
 
   return (
     <div className="whatsapp-cta-wrapper">
@@ -58,6 +60,7 @@ export function WhatsAppCtaRenderer({ data }: BlockRendererProps<WhatsAppCtaBloc
       >
         <span className="page-button-icon"><FontAwesomeIcon icon={faWhatsapp} /></span>
         <span>{label}</span>
+        {isSecondary && <ArrowCircleIcon />}
       </a>
     </div>
   );

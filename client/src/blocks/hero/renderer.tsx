@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import { ArrowCircleIcon } from '@/components/ArrowCircleIcon';
 import { getBlockImageCropStylesNoTransform } from '@/utils/imageCrop';
 import type { ImageBlockData, HeroBlockDataV2, HeroImageHeight, PageBlock } from '@/types';
 import type { BlockRendererProps } from '../_shared/types';
@@ -275,8 +276,9 @@ export function HeroRenderer({ data, pageSlug: _pageSlug, enableFormSubmit: _ena
           <a href={ctaHref} target="_blank" rel="noreferrer" className="btn btn-primary">
             {ctaLabel}
           </a>
-          <a href={secondaryHref} className="btn btn-outline">
-            {secondaryCta}
+          <a href={secondaryHref} className="btn btn-secondary">
+            <span>{secondaryCta}</span>
+            <ArrowCircleIcon />
           </a>
         </div>
         <div className="muted" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
