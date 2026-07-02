@@ -131,21 +131,19 @@
   min-height: clamp(520px, 72vh, 680px);
 }
 
+/* Navbar "pill" flutuante: o wrapper (.nav-shell) só cuida do espaçamento/
+   sticky; a cor, o arredondamento e a sombra ficam no .navbar em si, sempre
+   herdados do tema escolhido pelo usuário nas configurações (nunca fixos). */
 .nav-shell {
   position: sticky;
   top: 0;
   z-index: 30;
-  padding: 1rem 0;
-  transition: background 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
-  background: var(--color-deep);
-  border-bottom: 1px solid transparent;
-  backdrop-filter: blur(10px);
+  padding: 1.25rem clamp(1rem, 3vw, 1.5rem);
+  transition: padding 320ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-shell.scrolled {
-  background: var(--color-deep);
-  border-bottom-color: rgba(var(--theme-primary-rgb), 0.16);
-  box-shadow: 0 10px 30px rgba(var(--theme-text-rgb), 0.08);
+  padding: 0.75rem clamp(1rem, 3vw, 1.5rem);
 }
 
 .navbar {
@@ -154,6 +152,16 @@
   justify-content: space-between;
   gap: var(--space-4);
   flex-wrap: wrap;
+  background: var(--color-shell);
+  border-radius: 999px;
+  padding: 0.65rem clamp(1rem, 2.5vw, 1.75rem);
+  box-shadow: 0 10px 30px rgba(var(--theme-text-rgb), 0.06), 0 2px 8px rgba(var(--theme-text-rgb), 0.04);
+  transition: background 320ms ease, box-shadow 320ms ease;
+}
+
+.nav-shell.scrolled .navbar {
+  background: var(--color-surface);
+  box-shadow: 0 16px 40px rgba(var(--theme-text-rgb), 0.1);
 }
 
 .nav-brand {
@@ -234,18 +242,17 @@
   justify-content: center;
   width: 42px;
   height: 42px;
-  border-radius: 12px;
-  border: 1px solid rgba(var(--theme-accent-rgb), 0.35);
-  background: rgba(var(--theme-text-rgb), 0.8);
-  color: var(--color-paper);
-  font-size: 1.25rem;
-  box-shadow: 0 10px 24px rgba(var(--theme-text-rgb), 0.2);
-  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: var(--color-deep);
+  font-size: 1.3rem;
+  transition: transform 160ms ease, background 160ms ease;
 }
 
 .nav-menu-toggle:hover {
   transform: translateY(-1px);
-  border-color: rgba(var(--theme-primary-rgb), 0.7);
+  background: rgba(var(--theme-primary-rgb), 0.1);
 }
 
 .nav-mobile-overlay {
@@ -264,11 +271,11 @@
   width: calc(100% - 32px);
   max-width: 520px;
   max-height: calc(100vh - 32px);
-  background: var(--color-deep);
-  color: var(--color-paper);
-  border-radius: 20px;
-  border: 1px solid rgba(var(--theme-accent-rgb), 0.35);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.35);
+  background: var(--color-surface);
+  color: var(--color-deep);
+  border-radius: 28px;
+  border: 1px solid rgba(var(--theme-primary-rgb), 0.14);
+  box-shadow: 0 18px 44px rgba(var(--theme-text-rgb), 0.22);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
@@ -299,13 +306,18 @@
 }
 
 .nav-mobile-close {
-  border: 1px solid rgba(var(--theme-accent-rgb), 0.35);
+  border: 1px solid rgba(var(--theme-primary-rgb), 0.2);
   background: transparent;
-  color: var(--color-paper);
+  color: var(--color-deep);
   width: 34px;
   height: 34px;
-  border-radius: 10px;
+  border-radius: 999px;
   flex-shrink: 0;
+  transition: background 160ms ease;
+}
+
+.nav-mobile-close:hover {
+  background: rgba(var(--theme-primary-rgb), 0.08);
 }
 
 .nav-mobile-links {
@@ -324,16 +336,16 @@
 }
 
 .nav-mobile-link {
-  color: var(--color-paper);
-  padding: 0.55rem 0.6rem;
-  border-radius: 10px;
+  color: var(--color-deep);
+  padding: 0.6rem 0.9rem;
+  border-radius: 999px;
   font-weight: 600;
   transition: background 160ms ease, color 160ms ease;
 }
 
 .nav-mobile-link:hover {
-  background: rgba(var(--theme-primary-rgb), 0.18);
-  color: #fff;
+  background: rgba(var(--theme-primary-rgb), 0.1);
+  color: var(--color-terracotta);
 }
 
 .nav-mobile-link--child {
@@ -357,20 +369,24 @@
 
 .nav-link {
   font-weight: 600;
-  color: var(--color-paper);
-  padding: 0.35rem 0.65rem;
-  border-radius: var(--radius-s);
-  transition: color 160ms ease, background 160ms ease, border-color 160ms ease;
+  color: var(--color-deep);
+  opacity: 0.72;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  transition: opacity 200ms ease, color 200ms ease, background 200ms ease, transform 200ms ease;
 }
 
 .nav-link:hover {
+  opacity: 1;
   color: var(--color-terracotta);
+  background: rgba(var(--theme-primary-rgb), 0.08);
+  transform: translateY(-1px);
 }
 
 .nav-link.active {
-  background: var(--color-forest-light);
+  opacity: 1;
+  background: rgba(var(--theme-primary-rgb), 0.12);
   color: var(--color-terracotta-strong);
-  border: 1px solid var(--color-terracotta);
 }
 
 .nav-item.dropdown {
@@ -403,7 +419,7 @@
 
 .nav-item.dropdown.is-open .nav-caret {
   transform: rotate(180deg);
-  background-color: rgba(190, 103, 49, 0.18);
+  background-color: rgba(var(--theme-primary-rgb), 0.18);
   border-color: var(--color-terracotta-strong);
 }
 
