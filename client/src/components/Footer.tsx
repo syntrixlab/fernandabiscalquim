@@ -80,84 +80,101 @@ export function Footer({ settings }: { settings?: SiteSettings }) {
   };
 
   const siteName = settings?.siteName || 'seusite.com.br';
+  const brandTagline = (settings?.brandTagline ?? '').trim();
+  const showBrandTagline = brandTagline.length > 0;
+  const hasMetaLine = Boolean(settings?.cnpj || settings?.crp || settings?.contactEmail);
 
   return (
     <footer className="footer brand-footer">
-      <div className="container footer-nav-row">
-        {roots.map((item) => (
-          <div key={item.id} className="footer-column">
-            {item.type === 'EXTERNAL_URL' ? (
-              <a href={resolveHref(item)} className="footer-link" target="_blank" rel="noreferrer">
-                {item.label}
-              </a>
-            ) : (
-              <a href={resolveHref(item)} className="footer-link">
-                {item.label}
-              </a>
-            )}
-            {(childrenMap[item.id] ?? []).length > 0 && (
-              <div className="footer-sub-links">
-                {childrenMap[item.id].map((child) =>
-                  child.type === 'EXTERNAL_URL' ? (
-                    <a key={child.id} href={resolveHref(child)} className="footer-link" target="_blank" rel="noreferrer">
-                      {child.label}
-                    </a>
-                  ) : (
-                    <a key={child.id} href={resolveHref(child)} className="footer-link">
-                      {child.label}
-                    </a>
-                  )
-                )}
-              </div>
-            )}
-          </div>
-        ))}
+      {/* Camada decorativa (ondas do tema) — puramente ilustrativa, sem interação */}
+      <div className="footer-illus" aria-hidden="true">
+        <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
+          <path
+            className="footer-wave footer-wave--back"
+            d="M0,192L60,208C120,224,240,256,360,256C480,256,600,224,720,186.7C840,149,960,107,1080,101.3C1200,96,1320,128,1380,144L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
+          />
+          <path
+            className="footer-wave footer-wave--front"
+            d="M0,64L60,96C120,128,240,192,360,218.7C480,245,600,235,720,224C840,213,960,203,1080,170.7C1200,139,1320,85,1380,58.7L1440,32L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
+          />
+        </svg>
       </div>
-      <div className="footer-divider" />
-      <div className="container footer-grid">
-        <div className="footer-meta footer-brand">
-          <div className="footer-brand-text">
-            <strong className="footer-title">{siteName}</strong>
-            {settings?.cnpj && <div className="muted">CNPJ: {formatCnpjDisplay(settings.cnpj)}</div>}
-            {settings?.crp && <div className="muted">CRP: {settings.crp}</div>}
-            <div className="footer-social-list">
-              {socials.map((link) => {
-                const href = formatUrl(link);
-                const isExternal = /^https?:/i.test(href);
-                return (
-                  <a
-                    key={link.id}
-                    href={href}
-                    target={isExternal ? '_blank' : undefined}
-                    rel={isExternal ? 'noreferrer' : undefined}
-                    className="social-chip"
-                    aria-label={link.label || link.platform}
-                  >
-                    <FontAwesomeIcon icon={socialIconMap[link.platform]} />
-                  </a>
-                );
-              })}
-              {socials.length === 0 && <span className="muted">Nenhuma rede configurada</span>}
-            </div>
-            {settings?.contactEmail && (
-              <div className="footer-email">
-                <FontAwesomeIcon icon={faEnvelope} />
+
+      <div className="container footer-content">
+        <div className="footer-hero">
+          <strong className="footer-heading">{siteName}</strong>
+          {showBrandTagline && <p className="footer-tagline">{brandTagline}</p>}
+          {hasMetaLine && (
+            <div className="footer-meta-line muted">
+              {settings?.cnpj && <span>CNPJ: {formatCnpjDisplay(settings.cnpj)}</span>}
+              {settings?.crp && <span>CRP: {settings.crp}</span>}
+              {settings?.contactEmail && (
                 <a href={`mailto:${settings.contactEmail}`} className="footer-link">
                   {settings.contactEmail}
                 </a>
-              </div>
-            )}
+              )}
+            </div>
+          )}
+        </div>
+
+        {roots.length > 0 && (
+          <nav aria-label="Links do rodapé">
+            <ul className="footer-links-row">
+              {roots.map((item) => (
+                <li key={item.id} className="footer-links-item">
+                  {item.type === 'EXTERNAL_URL' ? (
+                    <a href={resolveHref(item)} className="footer-link" target="_blank" rel="noreferrer">
+                      {item.label}
+                    </a>
+                  ) : (
+                    <a href={resolveHref(item)} className="footer-link">
+                      {item.label}
+                    </a>
+                  )}
+                  {(childrenMap[item.id] ?? []).length > 0 && (
+                    <div className="footer-sub-links">
+                      {childrenMap[item.id].map((child) =>
+                        child.type === 'EXTERNAL_URL' ? (
+                          <a key={child.id} href={resolveHref(child)} className="footer-link" target="_blank" rel="noreferrer">
+                            {child.label}
+                          </a>
+                        ) : (
+                          <a key={child.id} href={resolveHref(child)} className="footer-link">
+                            {child.label}
+                          </a>
+                        )
+                      )}
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+
+        <div className="footer-bottom">
+          <p className="copyright">
+            &copy; {year} {siteName}. Todos os direitos reservados.
+          </p>
+          <div className="footer-social-list">
+            {socials.map((link) => {
+              const href = formatUrl(link);
+              const isExternal = /^https?:/i.test(href);
+              return (
+                <a
+                  key={link.id}
+                  href={href}
+                  target={isExternal ? '_blank' : undefined}
+                  rel={isExternal ? 'noreferrer' : undefined}
+                  className="social-chip"
+                  aria-label={link.label || link.platform}
+                >
+                  <FontAwesomeIcon icon={socialIconMap[link.platform]} />
+                </a>
+              );
+            })}
           </div>
-          
         </div>
-        <div className="footer-meta footer-socials">
-          
-        </div>
-      </div>
-      <div className="container footer-bottom">
-        <span>
-          &copy; {year} {siteName} | Todos os direitos reservados.
-        </span>
       </div>
     </footer>
   );
