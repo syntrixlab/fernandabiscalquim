@@ -106,7 +106,6 @@ export function siteThemeToCssVars(themeInput?: Partial<SiteTheme> | null): Site
     '--color-terracotta': primary,
     '--color-terracotta-strong': shadeColor(primary, '#000000', 0.14),
     '--color-clay': accent,
-    '--color-clay-strong': shadeColor(accent, '#000000', 0.14),
     '--color-burnt': primary,
     '--color-rust': shadeColor(primary, '#000000', 0.14),
     '--color-amber': accent,

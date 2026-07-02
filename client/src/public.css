@@ -821,6 +821,19 @@
   line-height: 1.7;
 }
 
+.cta-block .btn-primary {
+  background: linear-gradient(120deg, var(--color-terracotta), var(--color-terracotta-strong));
+  box-shadow: 0 12px 30px rgba(var(--theme-primary-rgb), 0.35);
+  color: #ffffff;
+}
+
+.cta-block .btn-primary:hover {
+  background: linear-gradient(120deg, var(--color-terracotta-strong), var(--color-terracotta));
+  box-shadow: 0 14px 34px rgba(var(--theme-primary-rgb), 0.42);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
 .cta-block--img-left .cta-media {
   order: -1;
 }
@@ -1881,158 +1894,6 @@
   flex-wrap: wrap;
 }
 
-.toast-container {
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  display: flex;
-  flex-direction: column-reverse;
-  gap: 0.75rem;
-  z-index: 9999;
-  pointer-events: none;
-  max-width: 380px;
-  width: calc(100vw - 3rem);
-}
-
-.toast-card {
-  pointer-events: all;
-  background: #1a2412;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 14px;
-  padding: 0.85rem 1rem 0.9rem;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.45);
-  color: #f0ebe0;
-  opacity: 0;
-  transform: translateY(12px) scale(0.97);
-  transition: opacity 260ms ease, transform 260ms ease;
-  overflow: hidden;
-}
-
-.toast-card--visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-.toast-card::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  border-radius: 14px 0 0 14px;
-}
-
-.toast-header {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  margin-bottom: 0.35rem;
-}
-
-.toast-icon {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.7rem;
-  font-weight: 700;
-  flex-shrink: 0;
-  line-height: 1;
-}
-
-.toast-card--success .toast-icon { background: #4caf50; color: #fff; }
-
-.toast-card--error   .toast-icon { background: #e53935; color: #fff; }
-
-.toast-card--warning .toast-icon { background: #f59e0b; color: #fff; }
-
-.toast-card--info    .toast-icon { background: #3b82f6; color: #fff; }
-
-.toast-status {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  flex: 1;
-}
-
-.toast-card--success .toast-status { color: #81c784; }
-
-.toast-card--error   .toast-status { color: #ef9a9a; }
-
-.toast-card--warning .toast-status { color: #fcd34d; }
-
-.toast-card--info    .toast-status { color: #93c5fd; }
-
-.toast-close {
-  background: none;
-  border: none;
-  color: rgba(255,255,255,0.4);
-  cursor: pointer;
-  font-size: 1.1rem;
-  line-height: 1;
-  padding: 0;
-  margin-left: auto;
-  transition: color 120ms;
-}
-
-.toast-close:hover { color: rgba(255,255,255,0.9); }
-
-.toast-title {
-  margin: 0 0 0.2rem;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: #f0ebe0;
-  line-height: 1.4;
-}
-
-.toast-message {
-  margin: 0 0 0.4rem;
-  font-size: 0.82rem;
-  color: rgba(240,235,224,0.7);
-  line-height: 1.45;
-}
-
-.toast-code {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 6px;
-  padding: 0.3rem 0.55rem;
-  cursor: pointer;
-  width: 100%;
-  text-align: left;
-  margin-top: 0.45rem;
-  transition: background 140ms;
-}
-
-.toast-code:hover { background: rgba(255,255,255,0.11); }
-
-.toast-code-label {
-  font-size: 0.7rem;
-  color: rgba(240,235,224,0.45);
-  flex-shrink: 0;
-}
-
-.toast-code code {
-  font-family: 'Courier New', monospace;
-  font-size: 0.75rem;
-  color: rgba(240,235,224,0.85);
-  flex: 1;
-}
-
-.toast-code-copy {
-  font-size: 0.68rem;
-  color: rgba(240,235,224,0.4);
-  flex-shrink: 0;
-  margin-left: auto;
-}
-
 @media (max-width: 720px) {
 .hero::after {
     left: 10%;
@@ -2146,32 +2007,31 @@
 }
 
 .page-public-section.section-bg-dark .btn-primary {
-  background: linear-gradient(135deg, var(--color-clay) 0%, var(--color-terracotta-strong) 100%);
-  box-shadow: 0 20px 30px -6px rgba(var(--theme-accent-rgb), 0.5);
+  background: linear-gradient(120deg, var(--color-clay), var(--color-terracotta-strong));
+  box-shadow: 0 12px 30px rgba(var(--theme-accent-rgb), 0.35);
   color: #ffffff;
 }
 
 .page-public-section.section-bg-dark .btn-primary:hover {
   /* Segue o tema (primária) em vez de um laranja fixo. */
-  background: linear-gradient(135deg, var(--color-clay) 0%, var(--color-terracotta-strong) 100%);
-  box-shadow: none;
+  background: linear-gradient(120deg, var(--color-terracotta), var(--color-terracotta-strong));
+  box-shadow: 0 14px 34px rgba(var(--theme-primary-rgb), 0.42);
   color: #ffffff;
-  transform: translateY(3px);
+  transform: translateY(-2px);
 }
 
-.page-public-section.section-bg-dark .btn-outline {
+.page-public-section.section-bg-dark .btn-outline,
+.page-public-section.section-bg-dark .btn-secondary {
   border-color: rgba(255, 255, 255, 0.25);
   color: var(--section-fg);
   background: rgba(255, 255, 255, 0.05);
 }
 
-.page-public-section.section-bg-dark .btn-outline:hover {
+.page-public-section.section-bg-dark .btn-outline:hover,
+.page-public-section.section-bg-dark .btn-secondary:hover {
   border-color: rgba(255, 255, 255, 0.4);
   background: rgba(255, 255, 255, 0.1);
 }
-
-/* .btn-secondary não entra aqui de propósito: é um pill de fundo sólido (accent do
-   tema), então mantém contraste próprio independente do fundo da seção. */
 
 .page-public-section.section-bg-dark .btn-ghost {
   border-color: rgba(255, 255, 255, 0.2);
@@ -2199,30 +2059,30 @@
 }
 
 .page-public-section.section-bg-earthy .btn-primary {
-  background: linear-gradient(135deg, var(--color-paper) 0%, var(--color-surface) 100%);
-  box-shadow: 0 20px 30px -6px rgba(var(--theme-text-rgb), 0.25);
+  background: #fbf1e4;
+  box-shadow: 0 10px 24px rgba(31, 45, 22, 0.2);
   color: var(--color-terracotta);
 }
 
 .page-public-section.section-bg-earthy .btn-primary:hover {
-  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-paper) 100%);
-  box-shadow: none;
-  color: var(--color-terracotta-strong);
-  transform: translateY(3px);
+  background: #ffe7cc;
+  box-shadow: 0 12px 28px rgba(31, 45, 22, 0.24);
+  color: var(--color-terracotta);
+  transform: translateY(-2px);
 }
 
-.page-public-section.section-bg-earthy .btn-outline {
+.page-public-section.section-bg-earthy .btn-outline,
+.page-public-section.section-bg-earthy .btn-secondary {
   border-color: rgba(31, 45, 22, 0.34);
   color: var(--section-fg);
   background: rgba(255, 255, 255, 0.18);
 }
 
-.page-public-section.section-bg-earthy .btn-outline:hover {
+.page-public-section.section-bg-earthy .btn-outline:hover,
+.page-public-section.section-bg-earthy .btn-secondary:hover {
   border-color: rgba(31, 45, 22, 0.5);
   background: rgba(255, 255, 255, 0.26);
 }
-
-/* .btn-secondary fica de fora (ver nota na seção section-bg-dark acima). */
 
 .page-public-section.section-bg-earthy .btn-ghost {
   border-color: rgba(31, 45, 22, 0.3);
