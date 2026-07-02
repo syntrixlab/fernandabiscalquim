@@ -1000,7 +1000,12 @@
 
 /* Rodapé "ilustrado": fundo claro derivado do tema (mesma família do navbar em
    pill), com ondas decorativas na cor primária do tema por trás do conteúdo.
-   Nada de cor fixa — tudo herda do preset/paleta escolhidos nas configurações. */
+   Nada de cor fixa — tudo herda do preset/paleta escolhidos nas configurações.
+   A transição suave com o conteúdo acima é feita em .app-main::after (index.css),
+   que sobrepõe o fim do conteúdo principal com um blur/fade até a cor exata
+   deste rodapé — assim funciona não importa o que exista na última seção da
+   página (bloco com fundo próprio, card, etc). Por isso aqui o fundo continua
+   sólido: é o alvo para onde o fade converge. */
 .footer {
   position: relative;
   overflow: hidden;
@@ -1008,7 +1013,6 @@
   color: var(--color-deep);
   padding: 0;
   margin-top: 0;
-  border-top: 1px solid rgba(var(--theme-text-rgb), 0.08);
 }
 
 .footer a {
