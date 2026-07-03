@@ -38,6 +38,15 @@ export const SITE_THEME_PRESETS: Record<SiteThemePreset, SiteTheme> = {
       primary: '#8a3651',
       accent: '#c9798d'
     }
+  },
+  'ameixa-rosa': {
+    preset: 'ameixa-rosa',
+    colors: {
+      background: '#fffbec',
+      text: '#72215c',
+      primary: '#894777',
+      accent: '#eec4be'
+    }
   }
 };
 
@@ -106,6 +115,7 @@ export function siteThemeToCssVars(themeInput?: Partial<SiteTheme> | null): Site
     '--color-terracotta': primary,
     '--color-terracotta-strong': shadeColor(primary, '#000000', 0.14),
     '--color-clay': accent,
+    '--color-clay-soft': desaturateColor(accent, 10),
     '--color-burnt': primary,
     '--color-rust': shadeColor(primary, '#000000', 0.14),
     '--color-amber': accent,
@@ -174,4 +184,65 @@ function parseHex(hex: string): { r: number; g: number; b: number } {
 
 function toHex(r: number, g: number, b: number): string {
   return `#${[r, g, b].map((value) => value.toString(16).padStart(2, '0')).join('')}`;
+}
+
+function hexToHsl(hex: string): { h: number; s: number; l: number } {
+  const { r, g, b } = parseHex(hex);
+  const rn = r / 255;
+  const gn = g / 255;
+  const bn = b / 255;
+  const max = Math.max(rn, gn, bn);
+  const min = Math.min(rn, gn, bn);
+  const l = (max + min) / 2;
+  const d = max - min;
+  let h = 0;
+  let s = 0;
+  if (d !== 0) {
+    s = d / (1 - Math.abs(2 * l - 1));
+    switch (max) {
+      case rn:
+        h = ((gn - bn) / d) % 6;
+        break;
+      case gn:
+        h = (bn - rn) / d + 2;
+        break;
+      default:
+        h = (rn - gn) / d + 4;
+        break;
+    }
+    h *= 60;
+    if (h < 0) h += 360;
+  }
+  return { h, s: s * 100, l: l * 100 };
+}
+
+function hslToHex(h: number, s: number, l: number): string {
+  const sNorm = s / 100;
+  const lNorm = l / 100;
+  const c = (1 - Math.abs(2 * lNorm - 1)) * sNorm;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = lNorm - c / 2;
+  let r = 0;
+  let g = 0;
+  let b = 0;
+  if (h < 60) {
+    r = c; g = x; b = 0;
+  } else if (h < 120) {
+    r = x; g = c; b = 0;
+  } else if (h < 180) {
+    r = 0; g = c; b = x;
+  } else if (h < 240) {
+    r = 0; g = x; b = c;
+  } else if (h < 300) {
+    r = x; g = 0; b = c;
+  } else {
+    r = c; g = 0; b = x;
+  }
+  return toHex(Math.round((r + m) * 255), Math.round((g + m) * 255), Math.round((b + m) * 255));
+}
+
+function desaturateColor(hex: string, amountPercent: number): string {
+  const { h, s, l } = hexToHsl(hex);
+  const nextS = Math.max(0, s - amountPercent);
+  return hslToHex(h, nextS, l);
 }

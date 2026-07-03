@@ -257,20 +257,20 @@ button {
 }
 
 /* Botão primário das páginas públicas: pill arredondado com gradiente do tema
-   (inspirado em Uiverse.io by Codecite). As cores vêm de --color-clay/--color-terracotta,
+   (inspirado em Uiverse.io by Codecite). As cores vêm de --color-clay/--color-clay-soft,
    então o botão sempre acompanha o tema escolhido pelo usuário nas configurações. */
 .app-shell .btn-primary {
   border-radius: 999px;
   padding: 0.95rem 2.25rem;
   border-color: transparent;
-  background: linear-gradient(135deg, var(--color-clay) 0%, var(--color-terracotta) 100%);
-  box-shadow: 0 20px 30px -6px rgba(var(--theme-primary-rgb), 0.5);
+  background: linear-gradient(135deg, var(--color-clay) 0%, var(--color-clay-soft) 100%);
+  box-shadow: 0 20px 30px -6px rgba(var(--theme-accent-rgb), 0.5);
 }
 
 .app-shell .btn-primary:hover {
   transform: translateY(3px);
   box-shadow: none;
-  background: linear-gradient(135deg, var(--color-clay) 0%, var(--color-terracotta) 100%);
+  background: linear-gradient(135deg, var(--color-clay) 0%, var(--color-clay-soft) 100%);
   color: #ffffff;
 }
 

@@ -162,11 +162,13 @@ export function Navbar({ settings }: { settings?: SiteSettings }) {
     <header className={`nav-shell ${scrolled ? 'scrolled' : ''}`}>
       <div className="container navbar">
         <NavLink to="/" className="nav-brand">
-          {settings?.logoUrl && (
-            <img src={settings.logoUrl} alt={brand} className="nav-brand-logo" />
-          )}
           <div className="nav-brand-text">
-            <span className="nav-brand-name">{brand}</span>
+            <span className="nav-brand-name-row">
+              <span className="nav-brand-name">{brand}</span>
+              {settings?.logoUrl && (
+                <img src={settings.logoUrl} alt="" className="nav-brand-logo" />
+              )}
+            </span>
             {showBrandTagline && (
               <span className="nav-brand-tagline" title={brandTagline}>
                 {brandTagline}

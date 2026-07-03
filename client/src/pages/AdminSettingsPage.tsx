@@ -842,7 +842,8 @@ function presetLabel(preset: SiteThemePreset): string {
     'terra-oliva': 'Terra e oliva',
     'sereno-azul': 'Sereno azul',
     salvia: 'Salvia',
-    'vinho-suave': 'Vinho suave'
+    'vinho-suave': 'Vinho suave',
+    'ameixa-rosa': 'Ameixa e rosa'
   };
   return labels[preset];
 }

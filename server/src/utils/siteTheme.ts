@@ -1,4 +1,4 @@
-export const siteThemePresetValues = ['terra-oliva', 'sereno-azul', 'salvia', 'vinho-suave'] as const;
+export const siteThemePresetValues = ['terra-oliva', 'sereno-azul', 'salvia', 'vinho-suave', 'ameixa-rosa'] as const;
 
 export type SiteThemePreset = (typeof siteThemePresetValues)[number];
 
@@ -55,6 +55,15 @@ export const SITE_THEME_PRESETS: Record<SiteThemePreset, SiteTheme> = {
       text: '#331822',
       primary: '#8a3651',
       accent: '#c9798d'
+    }
+  },
+  'ameixa-rosa': {
+    preset: 'ameixa-rosa',
+    colors: {
+      background: '#fffbec',
+      text: '#72215c',
+      primary: '#894777',
+      accent: '#eec4be'
     }
   }
 };

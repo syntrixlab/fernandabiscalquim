@@ -176,12 +176,20 @@
   opacity: 0.85;
 }
 
+.nav-brand-name-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
 .nav-brand-logo {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  object-fit: cover;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .nav-brand-text {
@@ -219,8 +227,8 @@
   }
   
   .nav-brand-logo {
-    width: 40px;
-    height: 40px;
+    width: 24px;
+    height: 24px;
   }
 }
 

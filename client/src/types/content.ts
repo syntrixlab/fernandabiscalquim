@@ -22,7 +22,7 @@ export type Article = {
   coverOriginalUrl?: string | null;
 };
 
-export type SiteThemePreset = 'terra-oliva' | 'sereno-azul' | 'salvia' | 'vinho-suave';
+export type SiteThemePreset = 'terra-oliva' | 'sereno-azul' | 'salvia' | 'vinho-suave' | 'ameixa-rosa';
 
 export type SiteThemeColors = {
   background: string;
