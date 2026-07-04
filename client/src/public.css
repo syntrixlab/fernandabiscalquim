@@ -1017,7 +1017,7 @@
 .footer {
   position: relative;
   overflow: hidden;
-  background: var(--color-shell);
+  background: var(--footer-surface, var(--color-shell));
   color: var(--color-deep);
   padding: 0;
   margin-top: 0;
@@ -1037,7 +1037,7 @@
   left: 0;
   width: 100%;
   pointer-events: none;
-  opacity: 0.16;
+  opacity: 0.45;
   z-index: 0;
   line-height: 0;
 }
@@ -1059,6 +1059,7 @@
 
 .footer-content {
   position: relative;
+  z-index: 1;
   z-index: 1;
   padding: clamp(3rem, 6vw, 4.5rem) 2rem clamp(2rem, 4vw, 2.5rem);
   display: flex;
@@ -1554,13 +1555,19 @@
   display: grid;
   grid-template-rows: auto 1fr;
   background: var(--section-surface);
-  border: 1px solid rgba(var(--theme-text-rgb, 31, 45, 22), 0.16);
-  border-radius: 16px;
+  border: 1px solid rgba(var(--theme-primary-rgb, 141, 43, 0), 0.14);
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 12px 30px rgba(var(--theme-text-rgb, 31, 45, 22), 0.08);
+  box-shadow: 0 16px 40px -14px rgba(var(--theme-text-rgb, 31, 45, 22), 0.2);
   text-decoration: none;
   color: inherit;
   min-height: 100%;
+  transition: transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease;
+}
+
+.article-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 52px -16px rgba(var(--theme-text-rgb, 31, 45, 22), 0.28);
 }
 
 .article-image {
@@ -1997,6 +2004,7 @@
 .page-public-section {
   padding: clamp(1.25rem, 2.6vw, 2.25rem) 0;
   position: relative;
+  border-radius: clamp(18px, 2vw, 28px);
   
   /* Variáveis padrão (sem fundo) */
   --section-bg: transparent;
@@ -3904,4 +3912,43 @@ body, p, span, .body-text, .text {
   .block-bg-wrapper--form {
     border-radius: 16px;
   }
+}
+
+/* Página do artigo: faz a seção preencher a altura disponível dentro de
+   .app-main (que é flex:1), para que o "Fundo da página" personalizável
+   cubra uniformemente do topo até o rodapé, sem faixa clara sobrando. */
+.app-shell .app-main > .article-page {
+  flex: 1 1 auto;
+}
+
+
+/* Marca-d'agua da borboleta no fundo do rodape (renderizada pelo Footer quando
+   uma cor e definida em Rodape > Borboleta de fundo). Usa o logo como mascara,
+   pintado com a cor/opacidade escolhida. */
+.footer-butterfly {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(72%, 480px);
+  aspect-ratio: 1 / 1;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Uniformiza a largura de TODAS as seções à largura do hero (a mais larga),
+   de forma responsiva. Sobrepõe as variações por seção (section-maxwidth-*)
+   e a diferença de gutter entre .container e .container--flush, para que todas
+   as seções fiquem alinhadas com a mesma largura. */
+.app-shell .page-public-section > .container {
+  max-width: 1600px !important;
+  width: min(1600px, calc(100% - 2rem)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }

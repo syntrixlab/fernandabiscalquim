@@ -5850,3 +5850,173 @@ figure[data-type="image"] {
   font-weight: 600;
   color: var(--color-forest);
 }
+
+/* ==========================================================================
+   Editor de cores por elemento (Configurações > Elementos)
+   Acordeão: categoria > elemento > estados (normal/hover) > propriedades.
+   Todas as cores usam variáveis do admin para acompanhar o tema do painel.
+   ========================================================================== */
+.element-style-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.element-category {
+  border: 1px solid var(--admin-border, rgba(0, 0, 0, 0.1));
+  border-radius: 12px;
+  background: var(--color-surface, #fff);
+  overflow: hidden;
+}
+
+.element-category-head,
+.element-accordion-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: var(--color-deep, #1f2d16);
+}
+
+.element-category-head:hover,
+.element-accordion-head:hover {
+  background: rgba(var(--theme-accent-rgb, 190, 103, 49), 0.06);
+}
+
+.element-category-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--color-terracotta, #8d2b00);
+}
+
+.element-category-title,
+.element-accordion-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.element-category-title strong,
+.element-accordion-title strong {
+  font-size: 0.95rem;
+}
+
+.element-category-chevron,
+.element-accordion-chevron {
+  transition: transform 180ms ease;
+  color: var(--color-forest, #46543a);
+  flex-shrink: 0;
+}
+
+.element-category.is-open > .element-category-head .element-category-chevron,
+.element-accordion.is-open > .element-accordion-head .element-accordion-chevron {
+  transform: rotate(180deg);
+}
+
+.element-category-badge,
+.element-accordion-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.4rem;
+  height: 1.4rem;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  background: var(--color-terracotta, #8d2b00);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.element-category-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem 0.85rem;
+}
+
+.element-accordion {
+  border: 1px solid var(--admin-border, rgba(0, 0, 0, 0.08));
+  border-radius: 10px;
+  background: var(--color-shell, #fbf7f0);
+  overflow: hidden;
+}
+
+.element-accordion-chevron {
+  order: -1;
+  font-size: 0.8rem;
+}
+
+.element-accordion-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 0.25rem 1rem 1rem 2.25rem;
+}
+
+.element-state-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.element-state-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-forest, #46543a);
+}
+
+.element-props-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.65rem;
+}
+
+.element-color-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.element-color-field-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--color-deep, #1f2d16);
+}
+
+.element-color-reset {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-forest, #46543a);
+  font-size: 0.72rem;
+  padding: 0.1rem 0.25rem;
+  border-radius: 6px;
+}
+
+.element-color-reset:hover {
+  background: rgba(var(--theme-accent-rgb, 190, 103, 49), 0.14);
+  color: var(--color-terracotta, #8d2b00);
+}
+
+.element-color-inputs input[type='color'].is-inherited {
+  opacity: 0.45;
+}
+
+.element-clear-all {
+  align-self: flex-start;
+  margin-top: 0.25rem;
+}

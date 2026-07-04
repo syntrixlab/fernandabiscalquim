@@ -9,9 +9,10 @@ import { ImagePickerModal } from '../components/ImagePickerModal';
 import { SocialLinksEditor } from '../components/SocialLinksEditor';
 import { FontPicker } from '../components/FontPicker';
 import { OfficeHoursEditor } from '../components/OfficeHoursEditor';
+import { ElementStyleEditor } from '../components/ElementStyleEditor';
 import { uploadMedia } from '../api/queries';
 import { useAdminSiteSettings, useUpdateSiteSettings } from '../hooks/queries/useSiteSettings';
-import type { SiteSettings, SiteTheme, SiteThemeColors, SiteThemePreset } from '../types';
+import type { SiteSettings, SiteTheme, SiteThemeColors, SiteThemePreset, SiteElementStyles } from '../types';
 import { GOOGLE_FONTS_HEADINGS, GOOGLE_FONTS_BODY } from '../constants/googleFonts';
 import {
   DEFAULT_SITE_THEME,
@@ -34,13 +35,14 @@ import '../admin.css';
 
 type CropTask = { src: string; file: File };
 type SettingsSetter = Dispatch<SetStateAction<SiteSettings>>;
-type SettingsSectionId = 'identity' | 'appearance' | 'contact' | 'professional' | 'seo';
+type SettingsSectionId = 'identity' | 'appearance' | 'elements' | 'contact' | 'professional' | 'seo';
 
 const maxLogoBytes = LOGO_MAX_FILE_SIZE_MB * 1024 * 1024;
 
 const SETTINGS_SECTIONS: Array<{ id: SettingsSectionId; label: string; icon: string }> = [
   { id: 'identity', label: 'Identidade', icon: '◈' },
   { id: 'appearance', label: 'Aparência', icon: '⬡' },
+  { id: 'elements', label: 'Elementos', icon: '▦' },
   { id: 'contact', label: 'Contato e redes', icon: '⌘' },
   { id: 'professional', label: 'Dados profissionais', icon: '⊡' },
   { id: 'seo', label: 'SEO e integrações', icon: '◎' }
@@ -537,6 +539,33 @@ function AppearanceSettingsSection({ settings, setSettings }: { settings: SiteSe
   );
 }
 
+function ElementsSettingsSection({ settings, setSettings }: { settings: SiteSettings; setSettings: SettingsSetter }) {
+  const theme = normalizeSiteTheme(settings.theme);
+  const elements = theme.elements ?? {};
+
+  const setElements = (next: SiteElementStyles) => {
+    setSettings((prev) => {
+      const prevTheme = normalizeSiteTheme(prev.theme);
+      return { ...prev, theme: { ...prevTheme, elements: next } };
+    });
+  };
+
+  return (
+    <div className="settings-tab-grid">
+      <div className="admin-card settings-panel-card settings-panel-card-full">
+        <div className="settings-card-heading">
+          <h2>Cores por elemento</h2>
+          <p className="muted small">
+            Personalize as cores de cada elemento nos estados normal e hover. O que você não
+            definir continua herdando automaticamente da paleta escolhida em Aparência.
+          </p>
+        </div>
+        <ElementStyleEditor elements={elements} onChange={setElements} />
+      </div>
+    </div>
+  );
+}
+
 function formatCep(value: string): string {
   const digits = value.replace(/\D/g, '').slice(0, 8);
   if (digits.length > 5) return `${digits.slice(0, 5)}-${digits.slice(5)}`;
@@ -933,7 +962,12 @@ export function AdminSettingsPage() {
       setSettings({ ...updated, theme: normalizeSiteTheme(updated.theme) });
       toast.success('Configurações salvas');
     } catch (error: any) {
-      const msg = error?.response?.data?.error?.message || 'Não foi possível salvar as configurações.';
+      const serverMsg = error?.response?.data?.error?.message;
+      const noResponse = !error?.response;
+      const msg = serverMsg
+        || (noResponse
+          ? 'Sem resposta do servidor (ele pode estar reiniciando). Aguarde alguns segundos e salve novamente.'
+          : 'Não foi possível salvar as configurações.');
       toast.error('Falha ao salvar', { message: msg, code: 'SETTINGS-001' });
     } finally {
       setSaving(false);
@@ -970,6 +1004,7 @@ export function AdminSettingsPage() {
                 />
               )}
               {activeSection === 'appearance' && <AppearanceSettingsSection settings={settings} setSettings={setSettings} />}
+              {activeSection === 'elements' && <ElementsSettingsSection settings={settings} setSettings={setSettings} />}
               {activeSection === 'contact' && <ContactSettingsSection settings={settings} setSettings={setSettings} />}
               {activeSection === 'professional' && <ProfessionalSettingsSection settings={settings} setSettings={setSettings} />}
               {activeSection === 'seo' && <SeoSettingsSection settings={settings} setSettings={setSettings} />}

@@ -7,6 +7,7 @@ import { Footer } from './Footer';
 import { fetchSiteSettings } from '../api/queries';
 import { WhatsAppFloatingButton } from './WhatsAppFloatingButton';
 import { siteThemeToCssVars } from '../utils/siteTheme';
+import { generateElementStylesCss } from '../utils/elementStyles';
 import type { SiteSettings } from '../types';
 
 // Buscar settings cacheados para renderização inicial (fallback)
@@ -167,8 +168,14 @@ export function PublicLayout() {
   // Usar dados do servidor, fallback para cache
   const currentSettings = settings || cachedSettings;
 
+  // CSS de overrides por elemento (só emite o que o usuário customizou; o resto herda do tema).
+  const elementStylesCss = generateElementStylesCss(currentSettings?.theme?.elements);
+
   return (
     <div className="app-shell" style={siteThemeToCssVars(currentSettings?.theme)}>
+      {elementStylesCss && (
+        <style data-element-styles dangerouslySetInnerHTML={{ __html: elementStylesCss }} />
+      )}
       <Navbar settings={currentSettings ?? undefined} />
       <main className="app-main">
         <Outlet />

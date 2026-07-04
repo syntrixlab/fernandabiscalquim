@@ -83,9 +83,22 @@ export function Footer({ settings }: { settings?: SiteSettings }) {
   const brandTagline = (settings?.brandTagline ?? '').trim();
   const showBrandTagline = brandTagline.length > 0;
   const hasMetaLine = Boolean(settings?.cnpj || settings?.crp || settings?.contactEmail);
+  const butterflyColor = settings?.theme?.elements?.['footer-butterfly']?.normal?.bg;
+  const showButterfly = Boolean(butterflyColor && settings?.logoUrl);
 
   return (
     <footer className="footer brand-footer">
+      {showButterfly && (
+        <div
+          className="footer-butterfly"
+          aria-hidden="true"
+          style={{
+            backgroundColor: butterflyColor,
+            WebkitMaskImage: `url("${settings?.logoUrl}")`,
+            maskImage: `url("${settings?.logoUrl}")`
+          }}
+        />
+      )}
       {/* Camada decorativa (ondas do tema) — puramente ilustrativa, sem interação */}
       <div className="footer-illus" aria-hidden="true">
         <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">

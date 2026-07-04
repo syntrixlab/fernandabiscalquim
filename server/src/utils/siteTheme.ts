@@ -14,11 +14,56 @@ export type SiteTypography = {
   bodyFont: string | null;
 };
 
+export type ElementStyleState = Record<string, string>;
+export type ElementStyle = Record<string, ElementStyleState>;
+export type SiteElementStyles = Record<string, ElementStyle>;
+
 export type SiteTheme = {
   preset: SiteThemePreset;
   colors: SiteThemeColors;
   typography?: SiteTypography;
+  elements?: SiteElementStyles;
 };
+
+const ELEMENT_STATE_KEYS = ['normal', 'hover'];
+const ELEMENT_PROP_KEYS = ['bg', 'text', 'border', 'shadow'];
+const colorHexPattern = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
+const colorFuncPattern = /^(?:rgb|rgba|hsl|hsla)\(\s*[0-9.,%\s/]+\)$/;
+
+function isSafeColor(value: unknown): value is string {
+  if (typeof value !== 'string') return false;
+  const v = value.trim();
+  if (!v || /[;{}<>]/.test(v)) return false;
+  return colorHexPattern.test(v) || colorFuncPattern.test(v);
+}
+
+/**
+ * Sanitiza os overrides de elementos de forma genérica (sem depender do registry
+ * do client): mantém apenas estados/propriedades conhecidos e cores válidas.
+ * Ids de elementos são preservados como chaves livres.
+ */
+export function sanitizeElementStyles(value: unknown): SiteElementStyles {
+  if (!isThemeObject(value)) return {};
+  const out: SiteElementStyles = {};
+
+  for (const [id, rawStyle] of Object.entries(value)) {
+    if (!isThemeObject(rawStyle) || id.length > 64) continue;
+    const style: ElementStyle = {};
+    for (const stateName of ELEMENT_STATE_KEYS) {
+      const rawState = (rawStyle as Record<string, unknown>)[stateName];
+      if (!isThemeObject(rawState)) continue;
+      const state: ElementStyleState = {};
+      for (const prop of ELEMENT_PROP_KEYS) {
+        const raw = (rawState as Record<string, unknown>)[prop];
+        if (isSafeColor(raw)) state[prop] = raw;
+      }
+      if (Object.keys(state).length) style[stateName] = state;
+    }
+    if (Object.keys(style).length) out[id] = style;
+  }
+
+  return out;
+}
 
 export const SITE_THEME_PRESETS: Record<SiteThemePreset, SiteTheme> = {
   'terra-oliva': {
@@ -99,6 +144,8 @@ export function normalizeSiteTheme(value?: unknown): SiteTheme {
     ? rawTypography.bodyFont.trim()
     : null;
 
+  const elements = sanitizeElementStyles(raw.elements);
+
   return {
     preset,
     colors: {
@@ -107,7 +154,8 @@ export function normalizeSiteTheme(value?: unknown): SiteTheme {
       primary: isHexColor(colors.primary) ? colors.primary : presetTheme.colors.primary,
       accent: isHexColor(colors.accent) ? colors.accent : presetTheme.colors.accent
     },
-    typography: { headingFont, bodyFont }
+    typography: { headingFont, bodyFont },
+    elements
   };
 }
 

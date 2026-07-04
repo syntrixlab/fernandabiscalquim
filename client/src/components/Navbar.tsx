@@ -60,6 +60,8 @@ export function Navbar({ settings }: { settings?: SiteSettings }) {
   const brand = settings?.siteName || 'Site';
   const brandTagline = (settings?.brandTagline ?? '').trim();
   const showBrandTagline = brandTagline.length > 0;
+  const logoMaskColor = settings?.theme?.elements?.['nav-logo']?.normal?.bg;
+  const useLogoMask = Boolean(logoMaskColor && settings?.logoUrl);
   const showScheduleCta = !(settings?.hideScheduleCta ?? false);
   const portalTarget = typeof document !== 'undefined' ? document.body : null;
 
@@ -166,7 +168,26 @@ export function Navbar({ settings }: { settings?: SiteSettings }) {
             <span className="nav-brand-name-row">
               <span className="nav-brand-name">{brand}</span>
               {settings?.logoUrl && (
-                <img src={settings.logoUrl} alt="" className="nav-brand-logo" />
+                useLogoMask ? (
+                  <span
+                    className="nav-brand-logo nav-brand-logo--masked"
+                    aria-hidden="true"
+                    style={{
+                      display: 'inline-block',
+                      backgroundColor: logoMaskColor,
+                      WebkitMaskImage: `url("${settings.logoUrl}")`,
+                      maskImage: `url("${settings.logoUrl}")`,
+                      WebkitMaskRepeat: 'no-repeat',
+                      maskRepeat: 'no-repeat',
+                      WebkitMaskPosition: 'center',
+                      maskPosition: 'center',
+                      WebkitMaskSize: 'contain',
+                      maskSize: 'contain'
+                    }}
+                  />
+                ) : (
+                  <img src={settings.logoUrl} alt="" className="nav-brand-logo" />
+                )
               )}
             </span>
             {showBrandTagline && (

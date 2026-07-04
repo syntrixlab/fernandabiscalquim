@@ -1,5 +1,6 @@
 import type { Media, SocialLink } from './auth';
 import type { Page } from './layout';
+import type { SiteElementStyles } from './elementStyles';
 
 export type Article = {
   id: string;
@@ -40,6 +41,8 @@ export type SiteTheme = {
   preset: SiteThemePreset;
   colors: SiteThemeColors;
   typography?: SiteTypography;
+  /** Overrides granulares de cor por elemento/estado (opcional). */
+  elements?: SiteElementStyles;
 };
 
 export type SiteAddress = {

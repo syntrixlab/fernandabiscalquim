@@ -1,4 +1,5 @@
 import type { SiteTheme, SiteThemeColors, SiteThemePreset, SiteTypography } from '@/types';
+import { normalizeSiteElementStyles } from './elementStyles';
 
 export type SiteThemeCssVars = Record<string, string>;
 
@@ -84,6 +85,8 @@ export function normalizeSiteTheme(value?: Partial<SiteTheme> | null): SiteTheme
     ? rawTypography.bodyFont.trim()
     : null;
 
+  const elements = normalizeSiteElementStyles(value?.elements);
+
   return {
     preset,
     colors: {
@@ -92,7 +95,8 @@ export function normalizeSiteTheme(value?: Partial<SiteTheme> | null): SiteTheme
       primary: isHexColor(colors.primary) ? colors.primary : presetTheme.colors.primary,
       accent: isHexColor(colors.accent) ? colors.accent : presetTheme.colors.accent
     },
-    typography: { headingFont, bodyFont }
+    typography: { headingFont, bodyFont },
+    elements
   };
 }
 

@@ -68,7 +68,7 @@ export function ArticlePage() {
     : null;
 
   return (
-    <section className="section-block">
+    <section className="section-block article-page">
       <div className="container" style={{ display: 'grid', gap: '1.5rem' }}>
         <SeoHead title={article.title} description={article.excerpt} />
         <div className="section-title">
