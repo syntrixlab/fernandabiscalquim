@@ -68,7 +68,7 @@ export function ArticlePage() {
     : null;
 
   return (
-    <section className="section-block">
+    <section className="section-block article-page">
       <div className="container" style={{ display: 'grid', gap: '1.5rem' }}>
         <SeoHead title={article.title} description={article.excerpt} />
         <div className="section-title">
@@ -79,6 +79,39 @@ export function ArticlePage() {
             {viewCount !== null && <span>{viewCount.toLocaleString('pt-BR')} visualizações</span>}
             <span>Leitura leve e aplicada</span>
           </div>
+          {article.authors && article.authors.length > 0 && (
+            <div className="article-authors">
+              {article.authors.map((author, index) => {
+                const inner = (
+                  <>
+                    {author.photoUrl ? (
+                      <img className="article-author-photo" src={author.photoUrl} alt={author.name} />
+                    ) : (
+                      <span className="article-author-photo is-placeholder" aria-hidden="true">
+                        {(author.name || '?').charAt(0).toUpperCase()}
+                      </span>
+                    )}
+                    <span className="article-author-name">{author.name}</span>
+                  </>
+                );
+                return author.profileUrl ? (
+                  <a
+                    key={index}
+                    className="article-author"
+                    href={author.profileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {inner}
+                  </a>
+                ) : (
+                  <span key={index} className="article-author">
+                    {inner}
+                  </span>
+                );
+              })}
+            </div>
+          )}
         </div>
         <article className="card" style={{ padding: 'clamp(1.5rem, 3vw, 2.5rem)' }}>
           <RichText html={article.content} />

@@ -3,7 +3,7 @@ import { requireAuth } from '../../middleware/auth';
 import { createNav, deleteNav, listNav, reorderNav, updateNav } from './navigation.controller';
 import { ensureHome, getHomeAdmin, updateHomeContent } from './home.controller';
 import { createPage, deletePage, getPageAdmin, listPages, publishPage, unpublishPage, updatePage } from './pages.controller';
-import { createPost, deletePost, listPostsAdmin, publishPost, unpublishPost, updatePost } from './posts.controller';
+import { createPost, deletePost, listPostAuthors, listPostsAdmin, publishPost, unpublishPost, updatePost } from './posts.controller';
 import { getSiteSettingsAdmin, updateSiteSettings } from './siteSettings.controller';
 import { deleteFormSubmission, getFormSubmission, listFormSubmissions } from './formSubmissions.controller';
 import { getDashboardMetrics } from './metrics.controller';
@@ -38,6 +38,7 @@ adminRoutes.post('/admin/pages/:id/unpublish', unpublishPage);
 adminRoutes.delete('/admin/pages/:id', deletePage);
 
 adminRoutes.get('/admin/posts', listPostsAdmin);
+adminRoutes.get('/admin/posts/authors', listPostAuthors);
 adminRoutes.post('/admin/posts', createPost);
 adminRoutes.put('/admin/posts/:id', updatePost);
 adminRoutes.delete('/admin/posts/:id', deletePost);
@@ -46,6 +47,7 @@ adminRoutes.patch('/admin/posts/:id/unpublish', unpublishPost);
 
 // Articles alias (cleaner path)
 adminRoutes.get('/articles', listPostsAdmin);
+adminRoutes.get('/articles/authors', listPostAuthors);
 adminRoutes.post('/articles', createPost);
 adminRoutes.patch('/articles/:id', updatePost);
 adminRoutes.delete('/articles/:id', deletePost);

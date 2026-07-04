@@ -64,16 +64,16 @@ export function BlogPage() {
         <SeoHead title="Blog" description="Artigos sobre saude emocional e bem-estar." />
         <div className="blog-header">
           <div className="section-title" style={{ marginBottom: 0 }}>
-            <h1 style={{ margin: 0 }}>Jornadas e reflexoes</h1>
-            <p>Leituras rapidas, aplicaveis e cuidadosas.</p>
+            <h1 style={{ margin: 0 }}>Jornadas e reflexões</h1>
+            <p>Leituras rápidas, aplicáveis e cuidadosas.</p>
           </div>
           <form className="blog-search" onSubmit={handleSearch}>
             <div className="search-shell">
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Buscar por titulo ou tema"
-                aria-label="Buscar por titulo ou tema"
+                placeholder="Buscar por título ou tema"
+                aria-label="Buscar por título ou tema"
               />
               <button className="search-button" type="submit" aria-label="Filtrar artigos">
                 <FontAwesomeIcon icon={faMagnifyingGlass} />
@@ -110,7 +110,7 @@ export function BlogPage() {
               <div className="blog-section">
                 <div className="section-title">
                   <h2>Mais vistos</h2>
-                  <p>O que as leitoras estao consumindo agora.</p>
+                  <p>O que as leitoras estão consumindo agora.</p>
                 </div>
                 {isBlogHomePending ? (
                   <div className="article-grid most-viewed-grid">
@@ -177,7 +177,7 @@ export function BlogPage() {
                   Anterior
                 </button>
                 <span className="muted">
-                  Pagina {page} de {totalPages}
+                  Página {page} de {totalPages}
                 </span>
                 <button
                   type="button"
@@ -185,7 +185,7 @@ export function BlogPage() {
                   disabled={page >= totalPages}
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 >
-                  Proxima
+                  Próxima
                 </button>
               </div>
             )}

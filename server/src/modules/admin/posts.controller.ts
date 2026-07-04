@@ -14,12 +14,32 @@ const baseSchema = z.object({
   status: z.enum(['draft', 'published']).optional(),
   publishedAt: z.string().datetime().nullable().optional(),
   tags: z.array(z.string()).optional(),
-  isFeatured: z.boolean().optional()
+  isFeatured: z.boolean().optional(),
+  authors: z
+    .array(
+      z.object({
+        name: z.string().trim().min(1).max(120),
+        photoUrl: z.string().url().nullable().optional(),
+        photoMediaId: z.string().uuid().nullable().optional(),
+        profileUrl: z.string().url().nullable().optional()
+      })
+    )
+    .max(10)
+    .optional()
 });
 
 export async function listPostsAdmin(_req: Request, res: Response, next: NextFunction) {
   try {
     const data = await service.listAdmin();
+    return sendSuccess(res, data);
+  } catch (error) {
+    return next(error);
+  }
+}
+
+export async function listPostAuthors(_req: Request, res: Response, next: NextFunction) {
+  try {
+    const data = await service.listAuthors();
     return sendSuccess(res, data);
   } catch (error) {
     return next(error);

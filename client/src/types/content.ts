@@ -1,5 +1,14 @@
 import type { Media, SocialLink } from './auth';
 import type { Page } from './layout';
+import type { SiteElementStyles } from './elementStyles';
+
+export type ArticleAuthor = {
+  name: string;
+  photoUrl?: string | null;
+  photoMediaId?: string | null;
+  /** Link do perfil no Instituto Junguiano de Ensino e Pesquisa (IJEP). */
+  profileUrl?: string | null;
+};
 
 export type Article = {
   id: string;
@@ -8,6 +17,7 @@ export type Article = {
   excerpt: string;
   content: string;
   tags: string[];
+  authors?: ArticleAuthor[];
   publishedAt?: string | null;
   status: 'draft' | 'published';
   isFeatured: boolean;
@@ -40,6 +50,8 @@ export type SiteTheme = {
   preset: SiteThemePreset;
   colors: SiteThemeColors;
   typography?: SiteTypography;
+  /** Overrides granulares de cor por elemento/estado (opcional). */
+  elements?: SiteElementStyles;
 };
 
 export type SiteAddress = {

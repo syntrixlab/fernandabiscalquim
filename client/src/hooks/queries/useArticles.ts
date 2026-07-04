@@ -1,9 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createArticle, deleteArticle, fetchAdminArticles, publishArticle, unpublishArticle, updateArticle } from '@/api/queries';
-import type { Article } from '@/types';
+import { createArticle, deleteArticle, fetchAdminArticles, fetchArticleAuthors, publishArticle, unpublishArticle, updateArticle } from '@/api/queries';
+import type { Article, ArticleAuthor } from '@/types';
 
 export function useArticles() {
   return useQuery<Article[]>({ queryKey: ['admin', 'posts'], queryFn: fetchAdminArticles });
+}
+
+export function useArticleAuthors() {
+  return useQuery<ArticleAuthor[]>({ queryKey: ['admin', 'post-authors'], queryFn: fetchArticleAuthors });
 }
 
 export function useCreateArticle() {
@@ -13,6 +17,7 @@ export function useCreateArticle() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin', 'posts'] });
       qc.invalidateQueries({ queryKey: ['articles'] });
+      qc.invalidateQueries({ queryKey: ['admin', 'post-authors'] });
     }
   });
 }
@@ -24,6 +29,7 @@ export function useUpdateArticle() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin', 'posts'] });
       qc.invalidateQueries({ queryKey: ['articles'] });
+      qc.invalidateQueries({ queryKey: ['admin', 'post-authors'] });
     }
   });
 }
@@ -35,6 +41,7 @@ export function useDeleteArticle() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin', 'posts'] });
       qc.invalidateQueries({ queryKey: ['articles'] });
+      qc.invalidateQueries({ queryKey: ['admin', 'post-authors'] });
     }
   });
 }
@@ -46,6 +53,7 @@ export function usePublishArticle() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin', 'posts'] });
       qc.invalidateQueries({ queryKey: ['articles'] });
+      qc.invalidateQueries({ queryKey: ['admin', 'post-authors'] });
     }
   });
 }
@@ -57,6 +65,7 @@ export function useUnpublishArticle() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin', 'posts'] });
       qc.invalidateQueries({ queryKey: ['articles'] });
+      qc.invalidateQueries({ queryKey: ['admin', 'post-authors'] });
     }
   });
 }

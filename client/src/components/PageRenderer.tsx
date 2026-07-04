@@ -137,7 +137,12 @@ function SectionRenderer({ section, sectionIndex, enableFormSubmit = true, pageS
   const verticalAlignValue = settings.verticalAlign ? alignMap[settings.verticalAlign] : 'start';
 
   const hasHero = section.cols.some((col) => col.blocks.some((b) => b.type === 'hero'));
-  const containerClass = hasHero ? 'container container--flush' : 'container';
+  // Blocos que devem ocupar a largura "flush" (mesma do hero), sem o gutter lateral
+  // aplicado às demais sections. Mantém a largura da caixa alinhada às sections do topo.
+  const hasFlushBlock = section.cols.some((col) =>
+    col.blocks.some((b) => b.type === 'hero' || b.type === 'recent-posts')
+  );
+  const containerClass = hasFlushBlock ? 'container container--flush' : 'container';
   const columnCount = getSectionColumnCount(section);
   const effectiveColumns = hasHero ? 1 : columnCount;
 

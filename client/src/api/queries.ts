@@ -1,5 +1,5 @@
 import { api } from './client';
-import type { Article, Media, NavbarItem, Page, SiteSettings, User } from '../types';
+import type { Article, ArticleAuthor, Media, NavbarItem, Page, SiteSettings, User } from '../types';
 
 export type PaginatedResponse<T> = {
   items: T[];
@@ -164,6 +164,11 @@ export const publishPage = async (id: string): Promise<Page> => {
 
 export const unpublishPage = async (id: string): Promise<Page> => {
   const { data } = await api.post(`/admin/pages/${id}/unpublish`);
+  return data.data;
+};
+
+export const fetchArticleAuthors = async (): Promise<ArticleAuthor[]> => {
+  const { data } = await api.get('/admin/posts/authors');
   return data.data;
 };
 

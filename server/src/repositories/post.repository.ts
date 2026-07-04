@@ -135,6 +135,37 @@ export class PostRepository {
     return prisma.post.delete({ where: { id }, include: { coverMedia: true } });
   }
 
+  async listDistinctAuthors(): Promise<
+    Array<{ name: string; photoUrl: string | null; photoMediaId: string | null; profileUrl: string | null }>
+  > {
+    const rows = await prisma.post.findMany({ select: { authors: true } });
+    const map = new Map<
+      string,
+      { name: string; photoUrl: string | null; photoMediaId: string | null; profileUrl: string | null }
+    >();
+    for (const row of rows) {
+      const list = Array.isArray(row.authors) ? row.authors : [];
+      for (const raw of list) {
+        if (!raw || typeof raw !== 'object') continue;
+        const a = raw as Record<string, unknown>;
+        const name = typeof a.name === 'string' ? a.name.trim() : '';
+        if (!name) continue;
+        const profileUrl = typeof a.profileUrl === 'string' && a.profileUrl ? a.profileUrl : null;
+        const photoUrl = typeof a.photoUrl === 'string' && a.photoUrl ? a.photoUrl : null;
+        const photoMediaId = typeof a.photoMediaId === 'string' && a.photoMediaId ? a.photoMediaId : null;
+        const key = (profileUrl || name).toLowerCase();
+        const existing = map.get(key);
+        if (!existing) {
+          map.set(key, { name, photoUrl, photoMediaId, profileUrl });
+        } else if (!existing.photoUrl && photoUrl) {
+          existing.photoUrl = photoUrl;
+          existing.photoMediaId = photoMediaId;
+        }
+      }
+    }
+    return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+  }
+
   incrementViews(id: string): Promise<PostWithMedia> {
     return prisma.post.update({
       where: { id },

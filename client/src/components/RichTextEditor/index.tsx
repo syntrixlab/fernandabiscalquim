@@ -16,11 +16,13 @@ import {
   faAlignLeft,
   faAlignCenter,
   faAlignRight,
-  faAlignJustify
+  faAlignJustify,
+  faVideo
 } from '@fortawesome/free-solid-svg-icons';
 import { TextAlign } from './extensions/textAlign';
 import { ImageFigure } from './extensions/imageFigure';
 import { AuthorAttribution } from './extensions/authorAttribution';
+import { YoutubeEmbed, extractYoutubeId } from './extensions/youtubeEmbed';
 import { useLinkManager } from './hooks/useLinkManager';
 import { useImageManager } from './hooks/useImageManager';
 import { RteLinkPopover } from './RteLinkPopover';
@@ -39,6 +41,11 @@ type Props = {
 
 export function RichTextEditor({ value, onChange, onUploadingChange }: Props) {
   const [authorModal, setAuthorModal] = useState<{ open: boolean; value: string }>({ open: false, value: '' });
+  const [youtubeModal, setYoutubeModal] = useState<{ open: boolean; value: string; error: string | null }>({
+    open: false,
+    value: '',
+    error: null
+  });
 
   const editor = useEditor({
     extensions: [
@@ -57,7 +64,8 @@ export function RichTextEditor({ value, onChange, onUploadingChange }: Props) {
       }),
       TextAlign,
       ImageFigure,
-      AuthorAttribution
+      AuthorAttribution,
+      YoutubeEmbed
     ],
     content: value,
     immediatelyRender: false,
@@ -113,6 +121,21 @@ export function RichTextEditor({ value, onChange, onUploadingChange }: Props) {
 
   const requestInsertQuoteAuthor = () => {
     setAuthorModal({ open: true, value: '' });
+  };
+
+  const requestInsertYoutube = () => {
+    setYoutubeModal({ open: true, value: '', error: null });
+  };
+
+  const applyYoutube = () => {
+    if (!editor) return;
+    const src = youtubeModal.value.trim();
+    if (!extractYoutubeId(src)) {
+      setYoutubeModal((prev) => ({ ...prev, error: 'URL do YouTube inválida. Cole o link do vídeo.' }));
+      return;
+    }
+    editor.chain().focus().setYoutubeVideo({ src }).run();
+    setYoutubeModal({ open: false, value: '', error: null });
   };
 
   const applyQuoteAuthor = () => {
@@ -214,7 +237,10 @@ export function RichTextEditor({ value, onChange, onUploadingChange }: Props) {
     ],
     [{ key: 'link', label: <FontAwesomeIcon icon={faLink} />, title: 'Inserir link', action: linkManager.openLinkModal }],
     [{ key: 'author', label: <span className="rte-heading-icon">Au</span>, title: 'Inserir autor da frase', action: requestInsertQuoteAuthor }],
-    [{ key: 'image', label: <FontAwesomeIcon icon={faImage} />, title: 'Inserir imagem', action: imageManager.openImageModal }]
+    [
+      { key: 'image', label: <FontAwesomeIcon icon={faImage} />, title: 'Inserir imagem', action: imageManager.openImageModal },
+      { key: 'youtube', label: <FontAwesomeIcon icon={faVideo} />, title: 'Adicionar vídeo do YouTube', action: requestInsertYoutube }
+    ]
   ];
 
   return (
@@ -294,6 +320,47 @@ export function RichTextEditor({ value, onChange, onUploadingChange }: Props) {
             }
           }}
         />
+      </Modal>
+
+      <Modal
+        isOpen={youtubeModal.open}
+        title="Adicionar vídeo do YouTube"
+        description="Cole o link do vídeo. Ele será inserido exatamente na posição atual do texto."
+        onClose={() => setYoutubeModal({ open: false, value: '', error: null })}
+        width={440}
+        footer={
+          <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+            <button className="btn btn-ghost" type="button" onClick={() => setYoutubeModal({ open: false, value: '', error: null })}>
+              Cancelar
+            </button>
+            <button className="btn btn-primary" type="button" onClick={applyYoutube} disabled={!youtubeModal.value.trim()}>
+              Inserir
+            </button>
+          </div>
+        }
+      >
+        <input
+          className="rte-input"
+          style={{ width: '100%' }}
+          placeholder="https://www.youtube.com/watch?v=..."
+          value={youtubeModal.value}
+          autoFocus
+          onChange={(e) => setYoutubeModal((prev) => ({ ...prev, value: e.target.value, error: null }))}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              applyYoutube();
+            }
+            if (e.key === 'Escape') {
+              setYoutubeModal({ open: false, value: '', error: null });
+            }
+          }}
+        />
+        {youtubeModal.error && (
+          <div className="rte-error" style={{ marginTop: '0.5rem' }}>
+            {youtubeModal.error}
+          </div>
+        )}
       </Modal>
     </div>
   );

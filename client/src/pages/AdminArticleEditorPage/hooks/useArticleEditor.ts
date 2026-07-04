@@ -18,7 +18,8 @@ const emptyArticle: ArticleForm = {
   content: '',
   status: 'draft',
   tags: [],
-  isFeatured: false
+  isFeatured: false,
+  authors: []
 };
 
 export function useArticleEditor(id: string | undefined) {

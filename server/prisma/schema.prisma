@@ -123,6 +123,7 @@ model Post {
   coverMedia   Media?     @relation("PostCoverMedia", fields: [coverMediaId], references: [id])
   status       PostStatus @default(draft)
   tags         String[]   @default([])
+  authors      Json       @default("[]")
   isFeatured   Boolean    @default(false)
   views        Int        @default(0)
   publishedAt  DateTime?

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faImage, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faImage, faTrash, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { Link, useParams } from 'react-router-dom';
 import { SeoHead } from '@/components/SeoHead';
 import { ArticleStatusBadge, ConfirmModal, Switch } from '@/components/AdminUI';
 import { uploadMedia } from '@/api/queries';
-import type { Media } from '@/types';
+import type { Media, ArticleAuthor } from '@/types';
 import { RichTextEditor } from '@/components/RichTextEditor';
 import { ImagePickerModal } from '@/components/ImagePickerModal';
 import type { CropRatio } from '@/components/FlexibleImageCropModal';
@@ -13,6 +13,7 @@ import { COVER_ASPECT, COVER_HEIGHT, COVER_MAX_FILE_SIZE_MB, COVER_WIDTH } from 
 import { ImageCropModal } from '@/components/ImageCropModal';
 import type { CropMetadata } from '@/utils/cropImageToBlob';
 import { useArticleEditor, type ArticleForm } from './hooks/useArticleEditor';
+import { useArticleAuthors } from '@/hooks/queries/useArticles';
 
 type CropTask = {
   src: string;
@@ -118,6 +119,9 @@ export function AdminArticleEditorPage() {
   const [coverUploading, setCoverUploading] = useState(false);
   const [imagePickerOpen, setImagePickerOpen] = useState(false);
   const [showRemoveCoverConfirm, setShowRemoveCoverConfirm] = useState(false);
+  const [authorPhotoIndex, setAuthorPhotoIndex] = useState<number | null>(null);
+  const [authorSearch, setAuthorSearch] = useState('');
+  const { data: authorSuggestions = [] } = useArticleAuthors();
 
   useEffect(() => {
     setCoverPreview(article.coverImageUrl ?? article.coverMedia?.url ?? null);
@@ -183,6 +187,57 @@ export function AdminArticleEditorPage() {
     setCoverMeta(null);
     setArticle((p) => ({ ...p, coverMediaId: null, coverCrop: null, coverImageUrl: null, coverAlt: null }));
     setShowRemoveCoverConfirm(false);
+  };
+
+  const authors: ArticleAuthor[] = article.authors ?? [];
+
+  const setAuthors = (next: ArticleAuthor[]) => {
+    setArticle((prev) => ({ ...prev, authors: next }));
+  };
+
+  const addAuthor = () => {
+    setAuthors([...authors, { name: '', photoUrl: null, photoMediaId: null, profileUrl: '' }]);
+  };
+
+  const updateAuthor = (index: number, patch: Partial<ArticleAuthor>) => {
+    setAuthors(authors.map((a, i) => (i === index ? { ...a, ...patch } : a)));
+  };
+
+  const removeAuthor = (index: number) => {
+    setAuthors(authors.filter((_, i) => i !== index));
+  };
+
+  const handleSelectAuthorPhoto = (image: { mediaId: string; src: string }) => {
+    if (authorPhotoIndex === null) return;
+    updateAuthor(authorPhotoIndex, { photoMediaId: image.mediaId, photoUrl: image.src });
+    setAuthorPhotoIndex(null);
+  };
+
+  const usedAuthorKeys = new Set(
+    authors.map((a) => (a.profileUrl || a.name || '').toLowerCase().trim()).filter(Boolean)
+  );
+  const authorQuery = authorSearch.trim().toLowerCase();
+  const authorMatches = authorQuery
+    ? authorSuggestions
+        .filter(
+          (a) =>
+            a.name.toLowerCase().includes(authorQuery) &&
+            !usedAuthorKeys.has((a.profileUrl || a.name).toLowerCase().trim())
+        )
+        .slice(0, 6)
+    : [];
+
+  const addExistingAuthor = (suggestion: ArticleAuthor) => {
+    setAuthors([
+      ...authors,
+      {
+        name: suggestion.name,
+        photoUrl: suggestion.photoUrl ?? null,
+        photoMediaId: suggestion.photoMediaId ?? null,
+        profileUrl: suggestion.profileUrl ?? ''
+      }
+    ]);
+    setAuthorSearch('');
   };
 
   const rightColumn = (
@@ -303,6 +358,104 @@ export function AdminArticleEditorPage() {
           </div>
         )}
       </div>
+      <div className="admin-card editor-card" style={{ display: 'grid', gap: '0.75rem' }}>
+        <div className="cover-card-header">
+          <div className="muted small">Autores</div>
+          <button
+            type="button"
+            className="icon-button"
+            aria-label="Adicionar autor"
+            title="Adicionar autor"
+            onClick={addAuthor}
+          >
+            <FontAwesomeIcon icon={faUserPlus} />
+          </button>
+        </div>
+        <div className="author-search">
+          <input
+            value={authorSearch}
+            onChange={(e) => setAuthorSearch(e.target.value)}
+            placeholder="Buscar autor já cadastrado..."
+          />
+          {authorMatches.length > 0 && (
+            <div className="author-search-results">
+              {authorMatches.map((suggestion, i) => (
+                <button
+                  type="button"
+                  key={`${suggestion.profileUrl || suggestion.name}-${i}`}
+                  className="author-search-item"
+                  onClick={() => addExistingAuthor(suggestion)}
+                >
+                  {suggestion.photoUrl ? (
+                    <img src={suggestion.photoUrl} alt={suggestion.name} />
+                  ) : (
+                    <span className="author-search-avatar is-placeholder">
+                      {(suggestion.name || '?').charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                  <span className="author-search-name">{suggestion.name}</span>
+                </button>
+              ))}
+            </div>
+          )}
+          {authorQuery && authorMatches.length === 0 && (
+            <p className="muted small" style={{ margin: '0.25rem 0 0' }}>
+              Nenhum autor encontrado. Use o botão + para cadastrar um novo.
+            </p>
+          )}
+        </div>
+        {authors.length === 0 && (
+          <p className="muted small" style={{ margin: 0 }}>
+            Nenhum autor. Adicione nome, foto e o link do perfil no IJEP.
+          </p>
+        )}
+        {authors.map((author, index) => (
+          <div key={index} className="author-editor-item">
+            <div className="author-editor-photo">
+              <button
+                type="button"
+                className="author-avatar-btn"
+                onClick={() => setAuthorPhotoIndex(index)}
+                title="Selecionar foto do autor"
+                aria-label="Selecionar foto do autor"
+              >
+                {author.photoUrl ? (
+                  <img src={author.photoUrl} alt={author.name || 'Foto do autor'} />
+                ) : (
+                  <FontAwesomeIcon icon={faImage} />
+                )}
+              </button>
+              <button
+                type="button"
+                className="icon-button tone-danger"
+                aria-label="Remover autor"
+                title="Remover autor"
+                onClick={() => removeAuthor(index)}
+              >
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+            </div>
+            <div className="author-editor-fields">
+              <div className="editor-field">
+                <label>Nome</label>
+                <input
+                  value={author.name}
+                  onChange={(e) => updateAuthor(index, { name: e.target.value })}
+                  placeholder="Nome do autor"
+                />
+              </div>
+              <div className="editor-field">
+                <label>Link do perfil no IJEP</label>
+                <input
+                  value={author.profileUrl ?? ''}
+                  onChange={(e) => updateAuthor(index, { profileUrl: e.target.value })}
+                  placeholder="https://www.ijep.com.br/..."
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 
@@ -355,6 +508,16 @@ export function AdminArticleEditorPage() {
               }
             : null
         }
+      />
+
+      <ImagePickerModal
+        open={authorPhotoIndex !== null}
+        onClose={() => setAuthorPhotoIndex(null)}
+        onSelect={handleSelectAuthorPhoto}
+        currentMediaId={authorPhotoIndex !== null ? authors[authorPhotoIndex]?.photoMediaId ?? null : null}
+        enableCrop={true}
+        cropRatio="1:1"
+        cropTitle="Recortar foto do autor"
       />
 
       <ImageCropModal

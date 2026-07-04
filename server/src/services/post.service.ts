@@ -1,4 +1,4 @@
-import { PostStatus } from '@prisma/client';
+import { PostStatus, Prisma } from '@prisma/client';
 import { cacheKeys, cacheTTL, cacheProvider } from '../config/cache';
 import { HttpError } from '../utils/errors';
 import { PostFilters, PostRepository, PostWithMedia } from '../repositories/post.repository';
@@ -16,6 +16,7 @@ export type PostInput = {
   publishedAt?: Date | null;
   tags?: string[];
   isFeatured?: boolean;
+  authors?: unknown[];
 };
 
 export class PostService {
@@ -92,6 +93,10 @@ export class PostService {
     return repository.listAll();
   }
 
+  async listAuthors() {
+    return repository.listDistinctAuthors();
+  }
+
   async create(payload: PostInput): Promise<PostWithMedia> {
     const status: PostStatus = payload.status ?? PostStatus.draft;
     const publishedAt = status === PostStatus.published ? payload.publishedAt ?? new Date() : null;
@@ -112,7 +117,8 @@ export class PostService {
       status,
       isFeatured,
       publishedAt,
-      tags: payload.tags ?? []
+      tags: payload.tags ?? [],
+      authors: (payload.authors ?? []) as Prisma.InputJsonValue
     });
 
     await this.invalidateCache(created.slug);
@@ -162,7 +168,9 @@ export class PostService {
       status,
       isFeatured,
       publishedAt,
-      tags: payload.tags ?? undefined
+      tags: payload.tags ?? undefined,
+      authors:
+        payload.authors === undefined ? undefined : (payload.authors as Prisma.InputJsonValue)
     });
 
     await this.invalidateCache(existing.slug);
