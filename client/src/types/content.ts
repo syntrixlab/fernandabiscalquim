@@ -52,6 +52,8 @@ export type SiteTheme = {
   typography?: SiteTypography;
   /** Overrides granulares de cor por elemento/estado (opcional). */
   elements?: SiteElementStyles;
+  /** Overrides granulares de cor por elemento/estado (opcional). */
+  elements?: SiteElementStyles;
 };
 
 export type SiteAddress = {

@@ -126,6 +126,8 @@ main {
   flex-direction: column;
   /* Espaço entre a última seção e o rodapé (respiro). */
   margin-bottom: clamp(2rem, 5vw, 4.5rem);
+  /* Espaço entre a última seção e o rodapé (respiro). */
+  margin-bottom: clamp(2rem, 5vw, 4.5rem);
   padding-bottom: 0;
 }
 
